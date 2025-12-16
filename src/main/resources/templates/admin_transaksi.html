@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/layout :: layout(~{::div})}">
+<body>
+    <div class="container py-5">
+        
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-check-circle"></i> <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3><i class="fa-solid fa-list-check"></i> Riwayat Transaksi</h3>
+            <a href="/admin" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+        </div>
+
+        <div class="card shadow border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>Penyewa</th>
+                                <th>Mobil</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Total Biaya</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sewa : ${listPeminjaman}">
+                                <td class="text-center" th:text="${sewa.id}"></td>
+                                <td class="fw-bold" th:text="${sewa.namaPeminjam}"></td>
+                                <td>
+                                    <span th:text="${sewa.mobil.merk} + ' ' + ${sewa.mobil.model}"></span><br>
+                                    <small class="text-muted" th:text="${sewa.mobil.platNomor}"></small>
+                                </td>
+                                <td class="text-center">
+                                    <small>
+                                        <span th:text="${sewa.tanggalPinjam}"></span> <br> s/d <br> 
+                                        <span th:text="${sewa.tanggalKembali}"></span>
+                                    </small>
+                                </td>
+                                <td class="text-end pe-4 text-success fw-bold" th:text="'Rp ' + ${#numbers.formatDecimal(sewa.totalHarga, 0, 'COMMA', 0, 'POINT')}"></td>
+                                <td class="text-center">
+                                    <span th:class="${sewa.statusTransaksi == 'Berjalan' ? 'badge bg-warning text-dark' : 'badge bg-success'}" 
+                                          th:text="${sewa.statusTransaksi}"></span>
+                                </td>
+                                <td class="text-center">
+                                    <a th:if="${sewa.statusTransaksi == 'Berjalan'}" 
+                                       th:href="@{/admin/transaksi/kembali/{id}(id=${sewa.id})}" 
+                                       class="btn btn-sm btn-primary"
+                                       onclick="return confirm('Selesaikan transaksi dan kembalikan status mobil jadi Tersedia?')">
+                                        <i class="fa-solid fa-rotate-left"></i> Kembalikan
+                                    </a>
+                                    <span th:if="${sewa.statusTransaksi == 'Selesai'}" class="text-muted small">
+                                        <i class="fa-solid fa-check-double"></i> Selesai
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

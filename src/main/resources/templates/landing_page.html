@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/layout :: layout(~{::div})}">
+<body>
+    <div>
+        <div class="hero-section text-center">
+            <div class="container">
+                <h1 class="display-4 fw-bold">Perjalanan Premium Dimulai Di Sini</h1>
+                <p class="lead">Sewa mobil impian Anda dengan harga terbaik dan proses termudah.</p>
+                
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <form th:action="@{/}" method="get">
+                            <div class="input-group input-group-lg">
+                                <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Cari merk atau model mobil...">
+                                <button class="btn btn-warning" type="submit"><i class="fa-solid fa-search"></i> Cari</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mb-5" id="katalog">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold border-start border-5 border-warning ps-3">Daftar Armada</h3>
+                <a href="/" class="btn btn-outline-secondary btn-sm" th:if="${keyword != null}">Reset Filter</a>
+            </div>
+
+            <div th:if="${listMobil.empty}" class="alert alert-info text-center">
+                <i class="fa-solid fa-circle-info"></i> Belum ada data mobil yang tersedia atau tidak ditemukan.
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col" th:each="mobil : ${listMobil}">
+                    <div class="card h-100 shadow border-0 hover-shadow">
+                        <div class="position-relative">
+                            <img th:src="@{${mobil.photosImagePath}}" class="card-img-top card-img-fix" alt="Foto Mobil">
+                            <span class="position-absolute top-0 end-0 badge m-2 p-2" 
+                                  th:classappend="${mobil.status == 'Tersedia' ? 'bg-success' : 'bg-danger'}"
+                                  th:text="${mobil.status}">
+                            </span>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold" th:text="${mobil.merk} + ' ' + ${mobil.model}"></h5>
+                            <hr>
+                            <div class="d-flex justify-content-between text-muted mb-2">
+                                <span><i class="fa-solid fa-id-card"></i> Plat</span>
+                                <span class="fw-bold text-dark" th:text="${mobil.platNomor}"></span>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted">
+                                <span><i class="fa-solid fa-tag"></i> Harga</span>
+                                <span class="fw-bold text-primary" th:text="'Rp ' + ${#numbers.formatDecimal(mobil.hargaPerHari, 0, 'COMMA', 0, 'POINT')} + '/hari'"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-white border-top-0 pb-3 pt-0">
+                            <div class="d-grid">
+                                <a th:href="@{/sewa/{id}(id=${mobil.id})}" 
+                                   class="btn" 
+                                   th:classappend="${mobil.status == 'Tersedia' ? 'btn-dark' : 'btn-secondary disabled'}"
+                                   th:text="${mobil.status == 'Tersedia' ? 'Sewa Sekarang' : 'Sedang Disewa'}">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

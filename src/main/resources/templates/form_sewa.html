@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/layout :: layout(~{::div})}">
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-dark text-white py-3 rounded-top-4">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-file-contract text-warning"></i> Form Sewa Mobil</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded border">
+                            <img th:src="@{${mobil.photosImagePath}}" class="rounded me-3 shadow-sm" width="100" height="70" style="object-fit: cover;">
+                            <div>
+                                <h5 class="mb-1 fw-bold" th:text="${mobil.merk} + ' ' + ${mobil.model}"></h5>
+                                <div class="badge bg-warning text-dark"><i class="fa-solid fa-tag"></i> <span th:text="${mobil.platNomor}"></span></div>
+                                <div class="text-primary fw-bold mt-1" th:text="'Rp ' + ${#numbers.formatDecimal(mobil.hargaPerHari, 0, 'COMMA', 0, 'POINT')} + ' / hari'"></div>
+                            </div>
+                        </div>
+
+                        <form th:action="@{/sewa/save}" th:object="${peminjaman}" method="POST">
+                            <input type="hidden" th:field="*{mobil.id}" />
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nama Penyewa (Sesuai Akun)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fa-solid fa-user-check"></i></span>
+                                    <input type="text" th:field="*{namaPeminjam}" class="form-control bg-light" readonly>
+                                </div>
+                                <div class="form-text text-muted small">Nama diambil otomatis dari akun login Anda.</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Tanggal Ambil</label>
+                                    <input type="date" th:field="*{tanggalPinjam}" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Tanggal Kembali</label>
+                                    <input type="date" th:field="*{tanggalKembali}" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                                    <i class="fa-solid fa-paper-plane"></i> Konfirmasi Sewa
+                                </button>
+                                <a href="/" class="btn btn-outline-secondary">Batal</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
